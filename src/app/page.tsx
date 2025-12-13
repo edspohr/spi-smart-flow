@@ -51,7 +51,7 @@ export default function Home() {
               </div>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-spi-primary mb-4 tracking-tight">
-                SPI Smart Flow
+                Smart Flow
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-2">
                 Plataforma de Documentación Inteligente
@@ -219,7 +219,7 @@ export default function Home() {
         {/* Footer */}
         <footer className="py-6 px-8 border-t border-border/50">
           <div className="container mx-auto text-center text-sm text-muted-foreground">
-            © 2024 SPI Smart Flow · Demo MVP · Proof of Concept para Board de Directores
+            © 2025 Smart Flow · Demo MVP · Proof of Concept para Board de Directores
           </div>
         </footer>
       </div>

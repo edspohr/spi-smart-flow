@@ -101,9 +101,9 @@ export default function ClientLayout({
       {/* Footer */}
       <footer className="bg-white/80 backdrop-blur-sm border-t border-border py-4">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          © 2024 SPI Smart Flow · Plataforma de Documentación Inteligente · 
-          <Link href="/" className="ml-2 text-spi-primary hover:underline font-medium">
-            ← Inicio
+          © 2025 Smart Flow · Plataforma de Documentación Inteligente · 
+          <Link href="/" className="ml-2 inline-flex items-center gap-1 text-spi-primary hover:underline font-semibold bg-spi-primary/10 px-3 py-1 rounded-full">
+            ← Volver al Inicio
           </Link>
         </div>
       </footer>

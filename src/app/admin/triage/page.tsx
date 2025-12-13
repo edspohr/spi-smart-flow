@@ -189,7 +189,14 @@ export default function TriagePage() {
                         </TableCell>
                       </TableRow>
                     </TooltipTrigger>
-                    <TooltipContent side="left" className="glass-card border-border">
+                    <TooltipContent 
+                      side="top" 
+                      align="center"
+                      sideOffset={8}
+                      className="glass-card border-border z-50 max-w-[280px] shadow-xl"
+                      avoidCollisions={true}
+                      collisionPadding={16}
+                    >
                       {getTooltipContent(client)}
                     </TooltipContent>
                   </Tooltip>

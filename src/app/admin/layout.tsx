@@ -79,7 +79,7 @@ export default function AdminLayout({
       {/* Footer */}
       <footer className="bg-white/80 backdrop-blur-sm border-t border-border py-4">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          © 2024 SPI Smart Flow · Torre de Control Ejecutivo
+          © 2025 Smart Flow · Torre de Control Ejecutivo
         </div>
       </footer>
     </div>
