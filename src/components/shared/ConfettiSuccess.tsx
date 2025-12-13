@@ -1,0 +1,98 @@
+'use client';
+
+import { useCallback, useEffect, useRef } from 'react';
+
+export function ConfettiSuccess() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const launchConfetti = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const confettiCount = 150;
+    const confetti: Array<{
+      x: number;
+      y: number;
+      r: number;
+      color: string;
+      tilt: number;
+      tiltAngle: number;
+      tiltAngleIncrement: number;
+      velocity: { x: number; y: number };
+    }> = [];
+
+    const colors = ['#10b981', '#34d399', '#6ee7b7', '#1e3a5f', '#f97316', '#fbbf24'];
+
+    for (let i = 0; i < confettiCount; i++) {
+      confetti.push({
+        x: Math.random() * canvas.width,
+        y: -10 - Math.random() * 100,
+        r: Math.random() * 6 + 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        tilt: Math.random() * 10 - 10,
+        tiltAngle: 0,
+        tiltAngleIncrement: Math.random() * 0.07 + 0.05,
+        velocity: {
+          x: Math.random() * 6 - 3,
+          y: Math.random() * 3 + 2
+        }
+      });
+    }
+
+    let animationFrame: number;
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      let stillVisible = false;
+
+      confetti.forEach(c => {
+        c.tiltAngle += c.tiltAngleIncrement;
+        c.x += c.velocity.x;
+        c.y += c.velocity.y;
+        c.tilt = Math.sin(c.tiltAngle) * 15;
+
+        if (c.y < canvas.height + 20) {
+          stillVisible = true;
+        }
+
+        ctx.beginPath();
+        ctx.lineWidth = c.r / 2;
+        ctx.strokeStyle = c.color;
+        ctx.moveTo(c.x + c.tilt + c.r / 2, c.y);
+        ctx.lineTo(c.x + c.tilt, c.y + c.tilt + c.r / 2);
+        ctx.stroke();
+      });
+
+      if (stillVisible) {
+        animationFrame = requestAnimationFrame(draw);
+      }
+    };
+
+    draw();
+
+    return () => {
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    launchConfetti();
+  }, [launchConfetti]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 pointer-events-none z-50"
+      style={{ width: '100vw', height: '100vh' }}
+    />
+  );
+}
