@@ -9,9 +9,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "SPI Smart Flow | Portal de Documentación Inteligente",
-  description: "Gestiona tus documentos legales con inteligencia artificial. Acelera el proceso de OTA y maximiza tus incentivos.",
-  keywords: ["legal tech", "documentos", "OTA", "SPI", "inteligencia artificial"],
+  title: "Smart Flow | Portal de Documentación Inteligente",
+  description: "Gestiona tus documentos legales con inteligencia artificial. Acelera el proceso de tu servicio y maximiza tus incentivos.",
+  keywords: ["legal tech", "documentos", "gestión documental", "inteligencia artificial"],
   icons: {
     icon: '/logo.png',
     apple: '/logo.png',

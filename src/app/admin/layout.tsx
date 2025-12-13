@@ -24,10 +24,22 @@ export default function AdminLayout({
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-4">
-              <Link href="/" className="flex items-center gap-3 group">
+              {/* Back to Home Button */}
+              <Link 
+                href="/" 
+                className="flex items-center gap-2 text-spi-primary hover:text-spi-primary/80 bg-spi-primary/10 hover:bg-spi-primary/20 px-4 py-2 rounded-xl font-semibold transition-all"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span className="hidden md:inline">Inicio</span>
+              </Link>
+              
+              {/* Logo */}
+              <Link href="/admin" className="flex items-center gap-3 group">
                 <Image 
                   src="/logo.png" 
-                  alt="SPI Smart Flow" 
+                  alt="Smart Flow" 
                   width={40} 
                   height={40} 
                   className="rounded-xl shadow-sm group-hover:shadow-md transition-shadow"
@@ -59,13 +71,8 @@ export default function AdminLayout({
               ))}
             </nav>
 
-            <div className="flex items-center gap-4">
-              <Link href="/" className="text-sm text-spi-primary hover:underline font-medium hidden md:block">
-                ← Inicio
-              </Link>
-              <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-white font-semibold shadow-md">
-                A
-              </div>
+            <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-white font-semibold shadow-md">
+              A
             </div>
           </div>
         </div>

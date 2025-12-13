@@ -20,7 +20,7 @@ export default function ClienteDashboard() {
           Bienvenido, {mockClient.name.split(' ')[0]} 👋
         </h1>
         <p className="text-muted-foreground">
-          Tu OTA por <span className="text-spi-accent font-semibold">${mockOTA.amount.toLocaleString()} USD</span> está en proceso. 
+          Tu servicio por <span className="text-spi-accent font-semibold">${mockOTA.amount.toLocaleString()} USD</span> está en proceso. 
           Completa tu documentación para asegurar tu descuento.
         </p>
       </div>
@@ -29,7 +29,7 @@ export default function ClienteDashboard() {
       <Card className="mb-8 glass-card animate-slide-up" style={{ animationDelay: '0.1s' }}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <span>📈</span> Estado de tu OTA
+            <span>📈</span> Estado de tu Trámite
           </CardTitle>
         </CardHeader>
         <CardContent>

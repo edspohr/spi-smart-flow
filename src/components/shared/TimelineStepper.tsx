@@ -13,7 +13,7 @@ const steps: Step[] = [
   { id: '2', label: 'Documentación', status: 'current' },
   { id: '3', label: 'En Revisión', status: 'pending' },
   { id: '4', label: 'Aprobado', status: 'pending' },
-  { id: '5', label: 'Pagado', status: 'pending' }
+  { id: '5', label: 'Completado', status: 'pending' }
 ];
 
 export function TimelineStepper() {
