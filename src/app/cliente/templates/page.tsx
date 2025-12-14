@@ -3,220 +3,117 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { SignatureCanvas } from '@/components/shared/SignatureCanvas';
 import { ConfettiSuccess } from '@/components/shared/ConfettiSuccess';
 import { mockClient } from '@/data/mock-clients';
 
-type DocumentState = 'preview' | 'signing' | 'signed';
-
 export default function TemplatesPage() {
-  const [docState, setDocState] = useState<DocumentState>('preview');
+  const [isSigned, setIsSigned] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showSignature, setShowSignature] = useState(false);
 
-  const handleSign = (signatureData: string) => {
-    console.log('Signature captured:', signatureData.substring(0, 50) + '...');
-    setDocState('signed');
+  const handleSign = () => {
+    setIsSigned(true);
     setShowConfetti(true);
+    setShowSignature(false);
     setTimeout(() => setShowConfetti(false), 3000);
   };
 
-  const handleReset = () => {
-    setDocState('preview');
-  };
+  const today = new Date().toLocaleDateString('es-CL', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {showConfetti && <ConfettiSuccess />}
-
-      <div className="mb-8 animate-slide-up">
-        <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
-          <span className="text-4xl">📝</span>
-          Generador de Documentos
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <ConfettiSuccess trigger={showConfetti} />
+      
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-xl font-semibold text-foreground mb-1">
+          Generar Documentos
         </h1>
-        <p className="text-muted-foreground">
-          Genera y firma documentos legales directamente en la plataforma. Tus datos ya están pre-completados.
+        <p className="text-sm text-muted-foreground">
+          Genera y firma documentos digitalmente
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-8">
-        {/* Document Preview */}
-        <Card className="glass-card animate-slide-up" style={{ animationDelay: '0.1s' }}>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span className="flex items-center gap-2">
-                <span className="text-xl">📄</span>
-                Poder Simple
-              </span>
-              <Badge 
-                className={
-                  docState === 'signed' 
-                    ? 'bg-spi-accent' 
-                    : docState === 'signing' 
-                    ? 'bg-spi-warning' 
-                    : 'bg-muted'
-                }
-              >
-                {docState === 'signed' && '✓ Firmado'}
-                {docState === 'signing' && '⏳ Esperando firma'}
-                {docState === 'preview' && 'Borrador'}
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {/* Fake Legal Document */}
-            <div className="bg-gradient-to-b from-amber-50 to-amber-100 text-gray-800 p-6 rounded-lg shadow-inner font-serif text-sm leading-relaxed">
-              <div className="text-center mb-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-1">PODER SIMPLE</h2>
-                <p className="text-xs text-gray-600">Documento generado automáticamente por SPI Smart Flow</p>
-              </div>
-
-              <p className="mb-4 text-justify">
-                En Santiago, a {new Date().toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' })}, 
-                ante mí comparece:
-              </p>
-
-              <div className="bg-white/50 rounded p-3 mb-4 border-l-4 border-spi-primary">
-                <p><strong>Nombre:</strong> {mockClient.name}</p>
-                <p><strong>RUT:</strong> {mockClient.rut}</p>
-                <p><strong>Domicilio:</strong> {mockClient.address}</p>
-                <p><strong>En representación de:</strong> {mockClient.company}</p>
-              </div>
-
-              <p className="mb-4 text-justify">
-                Quien por el presente instrumento viene a otorgar <strong>PODER SIMPLE</strong> a 
-                <strong> SPI Servicios Profesionales Integrales SpA</strong>, RUT 76.XXX.XXX-X, 
-                para que en su nombre y representación pueda realizar las siguientes gestiones:
-              </p>
-
-              <ul className="list-disc list-inside mb-4 pl-4 space-y-1">
-                <li>Gestionar y tramitar documentos ante entidades públicas y privadas</li>
-                <li>Solicitar y retirar certificados, antecedentes y documentación</li>
-                <li>Firmar en su representación los documentos que sean necesarios</li>
-                <li>Realizar todas las gestiones administrativas pertinentes</li>
-              </ul>
-
-              <p className="mb-6 text-justify">
-                El presente poder tendrá vigencia por el plazo de <strong>90 días</strong> desde la fecha de firma, 
-                pudiendo ser revocado en cualquier momento mediante comunicación escrita.
-              </p>
-
-              {/* Signature Area */}
-              <div className="border-t-2 border-gray-400 pt-4 mt-8">
-                <div className="flex justify-between items-end">
-                  <div className="text-center">
-                    <div className="w-48 h-16 border-b-2 border-gray-400 flex items-end justify-center pb-2">
-                      {docState === 'signed' && (
-                        <span className="text-spi-primary font-script text-2xl italic">
-                          {mockClient.name.split(' ')[0]} {mockClient.name.split(' ')[1]}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs mt-1">{mockClient.name}</p>
-                    <p className="text-xs text-gray-500">{mockClient.rut}</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-32 h-16 border-2 border-dashed border-gray-400 flex items-center justify-center">
-                      {docState === 'signed' ? (
-                        <span className="text-spi-accent text-xs font-bold">FIRMADO</span>
-                      ) : (
-                        <span className="text-gray-400 text-xs">Sello SPI</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Action Panel */}
-        <div className="space-y-6">
-          {/* Status Card */}
-          <Card className={`glass-card animate-slide-up ${docState === 'signed' ? 'ring-2 ring-spi-accent' : ''}`} style={{ animationDelay: '0.2s' }}>
-            <CardContent className="py-6">
-              {docState === 'preview' && (
-                <div className="text-center space-y-4">
-                  <div className="w-16 h-16 mx-auto rounded-full bg-spi-primary/20 flex items-center justify-center">
-                    <span className="text-3xl">📝</span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold mb-1">Documento Listo para Firmar</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Revisa el documento y procede a firmarlo digitalmente
-                    </p>
-                  </div>
-                  <Button 
-                    className="w-full gradient-primary hover:opacity-90"
-                    onClick={() => setDocState('signing')}
-                  >
-                    Generar y Firmar
-                  </Button>
-                </div>
-              )}
-
-              {docState === 'signing' && (
-                <div className="space-y-4">
-                  <div className="text-center">
-                    <h3 className="text-lg font-semibold mb-1">Firma Digital</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Dibuja tu firma en el área de abajo
-                    </p>
-                  </div>
-                  <SignatureCanvas 
-                    onSign={handleSign}
-                    onClear={() => {}}
-                  />
-                </div>
-              )}
-
-              {docState === 'signed' && (
-                <div className="text-center space-y-4">
-                  <div className="w-20 h-20 mx-auto rounded-full gradient-success flex items-center justify-center animate-check-bounce">
-                    <span className="text-4xl">✓</span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-spi-accent mb-1">
-                      ¡Documento Firmado Exitosamente!
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      El documento ha sido enviado automáticamente a SPI
-                    </p>
-                  </div>
-                  <div className="bg-muted/50 rounded-lg p-4 text-left">
-                    <p className="text-sm"><strong>Fecha de firma:</strong> {new Date().toLocaleString('es-CL')}</p>
-                    <p className="text-sm"><strong>Estado:</strong> <span className="text-spi-accent">Enviado</span></p>
-                    <p className="text-sm"><strong>Referencia:</strong> POD-{Date.now().toString().slice(-8)}</p>
-                  </div>
-                  <Button 
-                    variant="outline"
-                    className="w-full"
-                    onClick={handleReset}
-                  >
-                    Generar Otro Documento
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Info Card */}
-          <Card className="glass-card bg-spi-primary/10 border-spi-primary/30 animate-slide-up" style={{ animationDelay: '0.3s' }}>
-            <CardContent className="py-4">
-              <div className="flex items-start gap-3">
-                <span className="text-2xl">🔒</span>
+      {/* Document Preview */}
+      <Card className="border-border mb-6">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
+            <span>Poder Simple</span>
+            {isSigned && (
+              <span className="text-xs text-green-600 font-normal">Firmado ✓</span>
+            )}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="bg-slate-50 rounded-lg p-6 text-sm leading-relaxed">
+            <p className="text-center font-medium mb-4">PODER SIMPLE</p>
+            
+            <p className="mb-4">
+              En Santiago, a {today}, yo, <strong>{mockClient.name}</strong>, 
+              RUT <strong>{mockClient.rut}</strong>, domiciliado en {mockClient.address}, 
+              otorgo poder simple a Smart Flow SpA para representarme en los trámites 
+              relacionados con el servicio contratado.
+            </p>
+            
+            <p className="mb-6">
+              Este poder faculta al apoderado para presentar y retirar documentos, 
+              firmar formularios y realizar todas las gestiones necesarias.
+            </p>
+            
+            <div className="border-t border-slate-200 pt-4 text-center">
+              {isSigned ? (
                 <div>
-                  <h4 className="font-medium mb-1">Firma Digital Segura</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Tu firma digital tiene validez legal según la Ley 19.799. 
-                    El documento queda registrado con timestamp y huella digital única.
-                  </p>
+                  <p className="text-xs text-muted-foreground mb-1">Firmado digitalmente por</p>
+                  <p className="font-medium">{mockClient.name}</p>
+                  <p className="text-xs text-muted-foreground">{today}</p>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  Pendiente de firma
+                </p>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Sign Button or Signature Canvas */}
+      {!isSigned && (
+        <>
+          {!showSignature ? (
+            <Button 
+              className="w-full"
+              onClick={() => setShowSignature(true)}
+            >
+              Firmar documento
+            </Button>
+          ) : (
+            <Card className="border-border">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Firma aquí
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SignatureCanvas onSign={handleSign} />
+              </CardContent>
+            </Card>
+          )}
+        </>
+      )}
+
+      {isSigned && (
+        <div className="text-center py-4">
+          <p className="text-sm text-green-600 font-medium">
+            Documento firmado y enviado correctamente
+          </p>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -2,7 +2,11 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 
-export function ConfettiSuccess() {
+interface ConfettiSuccessProps {
+  trigger: boolean;
+}
+
+export function ConfettiSuccess({ trigger }: ConfettiSuccessProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const launchConfetti = useCallback(() => {
@@ -15,7 +19,7 @@ export function ConfettiSuccess() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const confettiCount = 150;
+    const confettiCount = 100;
     const confetti: Array<{
       x: number;
       y: number;
@@ -27,20 +31,20 @@ export function ConfettiSuccess() {
       velocity: { x: number; y: number };
     }> = [];
 
-    const colors = ['#10b981', '#34d399', '#6ee7b7', '#1e3a5f', '#f97316', '#fbbf24'];
+    const colors = ['#16a34a', '#22c55e', '#1e3a5f', '#3b82f6'];
 
     for (let i = 0; i < confettiCount; i++) {
       confetti.push({
         x: Math.random() * canvas.width,
         y: -10 - Math.random() * 100,
-        r: Math.random() * 6 + 4,
+        r: Math.random() * 4 + 2,
         color: colors[Math.floor(Math.random() * colors.length)],
         tilt: Math.random() * 10 - 10,
         tiltAngle: 0,
         tiltAngleIncrement: Math.random() * 0.07 + 0.05,
         velocity: {
-          x: Math.random() * 6 - 3,
-          y: Math.random() * 3 + 2
+          x: Math.random() * 4 - 2,
+          y: Math.random() * 2 + 2
         }
       });
     }
@@ -85,8 +89,12 @@ export function ConfettiSuccess() {
   }, []);
 
   useEffect(() => {
-    launchConfetti();
-  }, [launchConfetti]);
+    if (trigger) {
+      launchConfetti();
+    }
+  }, [trigger, launchConfetti]);
+
+  if (!trigger) return null;
 
   return (
     <canvas

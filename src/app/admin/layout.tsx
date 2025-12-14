@@ -6,8 +6,8 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { href: '/admin', label: 'Dashboard', icon: '📊' },
-  { href: '/admin/triage', label: 'Matriz de Triage', icon: '🚦' }
+  { href: '/admin', label: 'Dashboard' },
+  { href: '/admin/triage', label: 'Clientes' }
 ];
 
 export default function AdminLayout({
@@ -18,60 +18,56 @@ export default function AdminLayout({
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-indigo-50">
+    <div className="min-h-screen flex flex-col bg-white">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-border sticky top-0 z-40 shadow-sm">
+      <header className="border-b border-border bg-white sticky top-0 z-40">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-14">
+            {/* Left: Back + Logo */}
             <div className="flex items-center gap-4">
-              {/* Back to Home Button */}
               <Link 
                 href="/" 
-                className="flex items-center gap-2 text-spi-primary hover:text-spi-primary/80 bg-spi-primary/10 hover:bg-spi-primary/20 px-4 py-2 rounded-xl font-semibold transition-all"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                title="Volver al inicio"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
-                <span className="hidden md:inline">Inicio</span>
               </Link>
               
-              {/* Logo */}
-              <Link href="/admin" className="flex items-center gap-3 group">
+              <Link href="/admin" className="flex items-center gap-2">
                 <Image 
                   src="/logo.png" 
                   alt="Smart Flow" 
-                  width={40} 
-                  height={40} 
-                  className="rounded-xl shadow-sm group-hover:shadow-md transition-shadow"
+                  width={32} 
+                  height={32} 
+                  className="rounded-lg"
                 />
-                <div className="hidden md:flex items-center gap-2">
-                  <span className="font-semibold text-lg text-spi-primary">Smart Flow</span>
-                  <span className="text-xs bg-spi-primary/10 text-spi-primary px-2 py-1 rounded-full font-semibold">
-                    ADMIN
-                  </span>
-                </div>
+                <span className="hidden sm:block font-medium text-sm text-foreground">Smart Flow</span>
+                <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded">Admin</span>
               </Link>
             </div>
 
+            {/* Center: Navigation */}
             <nav className="flex items-center gap-1">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200",
+                    "px-3 py-1.5 rounded-md text-sm transition-colors",
                     pathname === item.href
-                      ? "bg-spi-primary text-white shadow-lg shadow-spi-primary/20"
-                      : "text-muted-foreground hover:text-foreground hover:bg-slate-100"
+                      ? "bg-primary text-white"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   )}
                 >
-                  <span className="mr-2">{item.icon}</span>
                   {item.label}
                 </Link>
               ))}
             </nav>
 
-            <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-white font-semibold shadow-md">
+            {/* Right: User */}
+            <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-medium">
               A
             </div>
           </div>
@@ -79,14 +75,14 @@ export default function AdminLayout({
       </header>
 
       {/* Main Content */}
-      <main className="flex-1">
+      <main className="flex-1 bg-slate-50">
         {children}
       </main>
 
       {/* Footer */}
-      <footer className="bg-white/80 backdrop-blur-sm border-t border-border py-4">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          © 2025 Smart Flow · Torre de Control Ejecutivo
+      <footer className="bg-white border-t border-border py-4">
+        <div className="container mx-auto px-4 text-center text-xs text-muted-foreground">
+          © 2025 Smart Flow
         </div>
       </footer>
     </div>
