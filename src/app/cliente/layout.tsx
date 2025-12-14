@@ -46,8 +46,8 @@ export default function ClientLayout({
                 <Image 
                   src="/logo.png" 
                   alt="Smart Flow" 
-                  width={32} 
-                  height={32} 
+                  width={40} 
+                  height={40} 
                   className="rounded-lg"
                 />
                 <span className="hidden sm:block font-medium text-sm text-foreground">Smart Flow</span>

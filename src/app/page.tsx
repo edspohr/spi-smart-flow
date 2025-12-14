@@ -12,8 +12,8 @@ export default function Home() {
             <Image 
               src="/logo.png" 
               alt="Smart Flow" 
-              width={80} 
-              height={80} 
+              width={120} 
+              height={120} 
               className="mx-auto mb-6"
               priority
             />
