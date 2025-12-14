@@ -9,25 +9,37 @@ import { mockDocuments } from '@/data/mock-clients';
 
 export default function BovedaPage() {
   const [showReuseModal, setShowReuseModal] = useState(false);
-  const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
+  const [selectedDoc, setSelectedDoc] = useState<typeof mockDocuments[0] | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [reusedDocs, setReusedDocs] = useState<string[]>([]);
 
-  const handleDocumentClick = (docId: string) => {
-    const doc = mockDocuments.find(d => d.id === docId);
-    if (doc?.status === 'pending' && doc.reuseAvailable) {
-      setSelectedDoc(docId);
+  const handleDocumentClick = (doc: typeof mockDocuments[0]) => {
+    if (doc.status === 'pending' && doc.reuseAvailable && doc.validUntil) {
+      setSelectedDoc(doc);
       setShowReuseModal(true);
     }
   };
 
   const handleReuse = () => {
     if (selectedDoc) {
-      setReusedDocs([...reusedDocs, selectedDoc]);
+      setReusedDocs([...reusedDocs, selectedDoc.id]);
       setShowReuseModal(false);
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 3000);
     }
+  };
+
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString('es-CL', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+  };
+
+  const isExpired = (dateStr?: string) => {
+    if (!dateStr) return false;
+    return new Date(dateStr) < new Date();
   };
 
   return (
@@ -40,7 +52,14 @@ export default function BovedaPage() {
           Bóveda Documental
         </h1>
         <p className="text-sm text-muted-foreground">
-          Gestiona y reutiliza tus documentos
+          Gestiona y reutiliza tus documentos vigentes
+        </p>
+      </div>
+
+      {/* Info Banner */}
+      <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6">
+        <p className="text-sm text-blue-800">
+          💡 Los documentos con el indicador <span className="font-medium text-primary">Reutilizable</span> pueden recuperarse de tu historial si aún están vigentes.
         </p>
       </div>
 
@@ -55,19 +74,30 @@ export default function BovedaPage() {
           <div className="divide-y divide-border">
             {mockDocuments.map((doc) => {
               const isReused = reusedDocs.includes(doc.id);
-              const docStatus = isReused ? 'verified' : doc.status;
+              const docStatus = isReused ? 'validated' : doc.status;
+              const canReuse = doc.reuseAvailable && doc.status === 'pending' && !isReused && doc.validUntil && !isExpired(doc.validUntil);
               
               return (
                 <div 
                   key={doc.id} 
-                  className={`flex items-center justify-between py-3 ${doc.reuseAvailable && doc.status === 'pending' && !isReused ? 'cursor-pointer hover:bg-slate-50 -mx-4 px-4' : ''}`}
-                  onClick={() => handleDocumentClick(doc.id)}
+                  className={`flex items-center justify-between py-4 ${canReuse ? 'cursor-pointer hover:bg-slate-50 -mx-4 px-4 rounded-lg' : ''}`}
+                  onClick={() => canReuse && handleDocumentClick(doc)}
                 >
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{doc.name}</p>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium text-foreground">{doc.name}</p>
+                      {canReuse && (
+                        <span className="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                          Reutilizable
+                        </span>
+                      )}
+                    </div>
                     <p className="text-xs text-muted-foreground">{doc.type}</p>
-                    {doc.reuseAvailable && doc.status === 'pending' && !isReused && (
-                      <p className="text-xs text-primary mt-0.5">Disponible en historial</p>
+                    {doc.validUntil && (
+                      <p className={`text-xs mt-0.5 ${isExpired(doc.validUntil) ? 'text-red-500' : 'text-muted-foreground'}`}>
+                        Vigente hasta: {formatDate(doc.validUntil)}
+                        {isExpired(doc.validUntil) && ' (Vencido)'}
+                      </p>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
@@ -103,11 +133,28 @@ export default function BovedaPage() {
       <Dialog open={showReuseModal} onOpenChange={setShowReuseModal}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-base">Documento encontrado</DialogTitle>
+            <DialogTitle className="text-base">Documento disponible en historial</DialogTitle>
           </DialogHeader>
-          <p className="text-sm text-muted-foreground py-4">
-            Encontramos este documento en tu historial. ¿Deseas reutilizarlo para este trámite?
-          </p>
+          {selectedDoc && (
+            <div className="py-4 space-y-3">
+              <div className="bg-slate-50 rounded-lg p-4">
+                <p className="font-medium text-sm">{selectedDoc.name}</p>
+                <div className="text-xs text-muted-foreground mt-2 space-y-1">
+                  {selectedDoc.reuseFromDate && (
+                    <p>Subido: {formatDate(selectedDoc.reuseFromDate)}</p>
+                  )}
+                  {selectedDoc.validUntil && (
+                    <p className="text-green-600">
+                      Vigente hasta: {formatDate(selectedDoc.validUntil)}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                ¿Deseas reutilizar este documento para tu trámite actual?
+              </p>
+            </div>
+          )}
           <DialogFooter className="gap-2">
             <Button variant="outline" onClick={() => setShowReuseModal(false)}>
               Cancelar

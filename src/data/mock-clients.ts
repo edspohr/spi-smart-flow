@@ -28,6 +28,7 @@ export interface Document {
   required: boolean;
   reuseAvailable?: boolean;
   reuseFromDate?: string;
+  validUntil?: string;
 }
 
 export interface HistoricalDocument {
@@ -68,6 +69,7 @@ export const mockDocuments: Document[] = [
     required: true,
     reuseAvailable: true,
     reuseFromDate: "2023-08-15",
+    validUntil: "2028-08-15",
   },
   {
     id: "doc-002",
@@ -83,7 +85,9 @@ export const mockDocuments: Document[] = [
     type: "cedula",
     status: "pending",
     required: true,
-    reuseAvailable: false,
+    reuseAvailable: true,
+    reuseFromDate: "2024-01-10",
+    validUntil: "2034-01-10",
   },
   {
     id: "doc-004",
@@ -91,6 +95,7 @@ export const mockDocuments: Document[] = [
     type: "certificado",
     status: "validated",
     required: true,
+    validUntil: "2025-06-30",
   },
   {
     id: "doc-005",

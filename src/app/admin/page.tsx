@@ -56,47 +56,45 @@ export default function AdminDashboard() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-64">
-            <ChartContainer 
-              config={{
-                manual: { label: 'Manual', color: '#e2e8f0' },
-                portal: { label: 'Portal', color: '#1e3a5f' }
-              }}
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={mockEfficiencyData}>
-                  <XAxis 
-                    dataKey="month" 
-                    tickLine={false} 
-                    axisLine={false}
-                    tick={{ fontSize: 12, fill: '#64748b' }}
-                  />
-                  <YAxis 
-                    tickLine={false} 
-                    axisLine={false}
-                    tick={{ fontSize: 12, fill: '#64748b' }}
-                    tickFormatter={(value) => `${value}%`}
-                  />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Area 
-                    type="monotone" 
-                    dataKey="manual" 
-                    stroke="#cbd5e1" 
-                    fill="#f1f5f9"
-                    strokeWidth={1.5}
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="portal" 
-                    stroke="#1e3a5f" 
-                    fill="#1e3a5f"
-                    fillOpacity={0.1}
-                    strokeWidth={1.5}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </ChartContainer>
-          </div>
+          <ChartContainer 
+            config={{
+              manual: { label: 'Manual', color: '#e2e8f0' },
+              portal: { label: 'Portal', color: '#1e3a5f' }
+            }}
+            className="h-[250px] w-full"
+          >
+            <AreaChart data={mockEfficiencyData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              <XAxis 
+                dataKey="month" 
+                tickLine={false} 
+                axisLine={false}
+                tick={{ fontSize: 12, fill: '#64748b' }}
+              />
+              <YAxis 
+                tickLine={false} 
+                axisLine={false}
+                tick={{ fontSize: 12, fill: '#64748b' }}
+                tickFormatter={(value) => `${value}%`}
+                width={45}
+              />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <Area 
+                type="monotone" 
+                dataKey="manual" 
+                stroke="#cbd5e1" 
+                fill="#f1f5f9"
+                strokeWidth={1.5}
+              />
+              <Area 
+                type="monotone" 
+                dataKey="portal" 
+                stroke="#1e3a5f" 
+                fill="#1e3a5f"
+                fillOpacity={0.1}
+                strokeWidth={1.5}
+              />
+            </AreaChart>
+          </ChartContainer>
         </CardContent>
       </Card>
 
@@ -124,7 +122,7 @@ export default function AdminDashboard() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-medium">${client.otaAmount.toLocaleString()}</p>
-                    <p className="text-xs text-red-600">{client.daysOverdue} días</p>
+                    <p className="text-xs text-red-600">{client.daysOverdue} días de retraso</p>
                   </div>
                 </div>
               ))}
