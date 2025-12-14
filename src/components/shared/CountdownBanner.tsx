@@ -17,9 +17,9 @@ export function CountdownBanner() {
 
   if (timeLeft.expired) {
     return (
-      <div className="w-full bg-red-50 border-b border-red-100 py-2 px-4">
+      <div className="w-full bg-red-500 text-white py-2.5 px-4">
         <div className="container mx-auto text-center">
-          <span className="text-sm text-red-600 font-medium">
+          <span className="text-sm font-medium">
             El período de descuento ha expirado
           </span>
         </div>
@@ -28,17 +28,17 @@ export function CountdownBanner() {
   }
 
   return (
-    <div className="w-full bg-amber-50 border-b border-amber-100 py-2 px-4">
-      <div className="container mx-auto flex items-center justify-center gap-4 text-sm">
-        <span className="text-amber-800">
-          <span className="font-medium">
-            {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m
-          </span>
-          {' '}restantes
+    <div className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white py-2.5 px-4">
+      <div className="container mx-auto flex items-center justify-center gap-3 text-sm font-medium">
+        <span className="flex items-center gap-2">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m restantes
         </span>
-        <span className="text-amber-600">•</span>
-        <span className="text-amber-800">
-          Ahorra <span className="font-medium">${discount.toLocaleString()}</span>
+        <span className="opacity-70">•</span>
+        <span className="bg-white/20 px-2.5 py-0.5 rounded-full">
+          Ahorra ${discount.toLocaleString()}
         </span>
       </div>
     </div>
