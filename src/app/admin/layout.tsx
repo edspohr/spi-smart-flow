@@ -6,8 +6,8 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { href: '/admin', label: 'Dashboard' },
-  { href: '/admin/triage', label: 'Clientes' }
+  { href: '/admin', label: 'Dashboard', icon: '📊' },
+  { href: '/admin/triage', label: 'Clientes', icon: '🚦' }
 ];
 
 export default function AdminLayout({
@@ -61,6 +61,7 @@ export default function AdminLayout({
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   )}
                 >
+                  <span className="mr-1">{item.icon}</span>
                   {item.label}
                 </Link>
               ))}

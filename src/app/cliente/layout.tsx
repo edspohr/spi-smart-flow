@@ -8,10 +8,10 @@ import { CountdownBanner } from '@/components/shared/CountdownBanner';
 import { mockClient } from '@/data/mock-clients';
 
 const navItems = [
-  { href: '/cliente', label: 'Dashboard' },
-  { href: '/cliente/boveda', label: 'Documentos' },
-  { href: '/cliente/templates', label: 'Generar' },
-  { href: '/cliente/verificar', label: 'Validar' }
+  { href: '/cliente', label: 'Dashboard', icon: '📊' },
+  { href: '/cliente/boveda', label: 'Documentos', icon: '🗄️' },
+  { href: '/cliente/templates', label: 'Generar', icon: '📝' },
+  { href: '/cliente/verificar', label: 'Validar', icon: '🤖' }
 ];
 
 export default function ClientLayout({
@@ -67,6 +67,7 @@ export default function ClientLayout({
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   )}
                 >
+                  <span className="mr-1">{item.icon}</span>
                   {item.label}
                 </Link>
               ))}
@@ -86,20 +87,20 @@ export default function ClientLayout({
 
         {/* Mobile Navigation */}
         <nav className="md:hidden flex border-t border-border">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex-1 py-2 text-center text-xs font-medium transition-colors",
-                pathname === item.href
-                  ? "bg-primary text-white"
-                  : "text-muted-foreground"
-              )}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {navItems.map((item) =>              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex-1 py-2 text-center text-xs font-medium transition-colors flex flex-col items-center",
+                  pathname === item.href
+                    ? "bg-primary text-white"
+                    : "text-muted-foreground"
+                )}
+              >
+                <span className="text-lg">{item.icon}</span>
+                {item.label}
+              </Link>
+          )}
         </nav>
       </header>
 
