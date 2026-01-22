@@ -42,48 +42,101 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
-  
-  /* Minimal Color Palette */
-  --color-spi-primary: #1e3a5f;
-  --color-spi-accent: #16a34a;
-  --color-spi-warning: #ea580c;
-  --color-spi-danger: #dc2626;
 }
 
-/* Minimalist Light Theme */
+/* PREMIUM THEME SYSTEM */
 :root {
-  --radius: 0.5rem;
+  --radius: 0.75rem; /* Softer, premium corners */
+  
+  /* Light Mode - Crisp & Clean */
   --background: #ffffff;
-  --foreground: #1e293b;
+  --foreground: #0f172a; /* Slate 900 */
+  
   --card: #ffffff;
-  --card-foreground: #1e293b;
+  --card-foreground: #0f172a;
+  
   --popover: #ffffff;
-  --popover-foreground: #1e293b;
-  --primary: #1e3a5f;
+  --popover-foreground: #0f172a;
+  
+  --primary: #0f172a; /* Midnight Blue/Black */
   --primary-foreground: #ffffff;
-  --secondary: #f8fafc;
-  --secondary-foreground: #1e293b;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --accent: #16a34a;
-  --accent-foreground: #ffffff;
-  --destructive: #dc2626;
-  --border: #e2e8f0;
+  
+  --secondary: #f1f5f9; /* Slate 100 */
+  --secondary-foreground: #0f172a;
+  
+  --muted: #f8fafc; /* Slate 50 */
+  --muted-foreground: #64748b; /* Slate 500 */
+  
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+  
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  
+  --border: #e2e8f0; /* Slate 200 */
   --input: #e2e8f0;
-  --ring: #1e3a5f;
-  --chart-1: #16a34a;
-  --chart-2: #1e3a5f;
-  --chart-3: #ea580c;
-  --chart-4: #7c3aed;
-  --chart-5: #db2777;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #1e293b;
-  --sidebar-primary: #1e3a5f;
+  --ring: #0f172a;
+  
+  --chart-1: #0f172a;
+  --chart-2: #334155;
+  --chart-3: #64748b;
+  --chart-4: #94a3b8;
+  --chart-5: #cbd5e1;
+  
+  --sidebar: #f8fafc;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary: #0f172a;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f1f5f9;
-  --sidebar-accent-foreground: #1e293b;
+  --sidebar-accent: #e2e8f0;
+  --sidebar-accent-foreground: #0f172a;
   --sidebar-border: #e2e8f0;
-  --sidebar-ring: #1e3a5f;
+  --sidebar-ring: #0f172a;
+}
+
+.dark {
+  /* Dark Mode - Deep & Elegant */
+  --background: #020617; /* Slate 950 - Ultra dark blue-black */
+  --foreground: #f8fafc; /* Slate 50 */
+  
+  --card: #0f172a; /* Slate 900 */
+  --card-foreground: #f8fafc;
+  
+  --popover: #0f172a;
+  --popover-foreground: #f8fafc;
+  
+  --primary: #f8fafc; /* White/Slate 50 */
+  --primary-foreground: #0f172a; /* Inverse */
+  
+  --secondary: #1e293b; /* Slate 800 */
+  --secondary-foreground: #f8fafc;
+  
+  --muted: #0f172a;
+  --muted-foreground: #94a3b8; /* Slate 400 */
+  
+  --accent: #1e293b;
+  --accent-foreground: #f8fafc;
+  
+  --destructive: #7f1d1d;
+  --destructive-foreground: #f8fafc;
+  
+  --border: #1e293b; /* Slate 800 */
+  --input: #1e293b;
+  --ring: #cbd5e1;
+  
+  --chart-1: #22c55e;
+  --chart-2: #2563eb;
+  --chart-3: #eab308;
+  --chart-4: #a855f7;
+  --chart-5: #ec4899;
+  
+  --sidebar: #020617;
+  --sidebar-foreground: #f8fafc;
+  --sidebar-primary: #3b82f6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1e293b;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: #1e293b;
+  --sidebar-ring: #cbd5e1;
 }
 
 @layer base {
@@ -91,120 +144,48 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground antialiased selection:bg-primary/20;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 }
 
-/* Animations - Subtle only */
+/* Animations */
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in {
-  animation: fade-in 0.2s ease-out forwards;
+  animation: fade-in 0.4s ease-out forwards;
 }
 
 .animate-slide-up {
-  animation: slide-up 0.3s ease-out forwards;
+  animation: slide-up 0.5s ease-out forwards;
 }
 
-/* Minimal Card Styles */
-.card-minimal {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.5rem;
+/* Utility Utilities for Premium Feel */
+@utility glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.card-minimal:hover {
-  border-color: #cbd5e1;
+.dark .glass {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Clean button styles */
-.btn-primary {
-  background: #1e3a5f;
-  color: #ffffff;
-  padding: 0.625rem 1.25rem;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  font-size: 0.875rem;
-  transition: opacity 0.15s;
+@utility text-balance {
+  text-wrap: balance;
 }
 
-.btn-primary:hover {
-  opacity: 0.9;
-}
-
-.btn-secondary {
-  background: #f8fafc;
-  color: #1e293b;
-  border: 1px solid #e2e8f0;
-  padding: 0.625rem 1.25rem;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  font-size: 0.875rem;
-  transition: background 0.15s;
-}
-
-.btn-secondary:hover {
-  background: #f1f5f9;
-}
-
-/* Status dots */
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-
-.status-dot-success { background: #16a34a; }
-.status-dot-warning { background: #ea580c; }
-.status-dot-danger { background: #dc2626; }
-.status-dot-neutral { background: #94a3b8; }
-
-/* Minimal progress bar */
-.progress-minimal {
-  height: 4px;
-  background: #e2e8f0;
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.progress-minimal-fill {
-  height: 100%;
-  background: #1e3a5f;
-  border-radius: 2px;
-  transition: width 0.3s ease;
-}
-
-/* Countdown bar - subtle */
-.countdown-bar {
-  background: #fef3c7;
-  border-bottom: 1px solid #fde68a;
-}
-
-/* Signature canvas */
-.signature-canvas {
-  background: #fffbeb;
-  border: 1px dashed #d4a574;
-  border-radius: 0.5rem;
-}
-
-/* Table minimal */
-.table-minimal th {
-  font-weight: 500;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #64748b;
-}
-
-.table-minimal td {
-  font-size: 0.875rem;
+@utility transition-surf {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
 }
