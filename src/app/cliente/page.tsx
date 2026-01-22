@@ -6,11 +6,23 @@ import { Progress } from '@/components/ui/progress';
 import { TimelineStepper } from '@/components/shared/TimelineStepper';
 import { mockClient, mockOTA, mockDocuments, calculateDiscount } from '@/data/mock-clients';
 import { ModeToggle } from '@/components/mode-toggle';
-import { Camera, Upload, FileText, CheckCircle2, Clock, AlertCircle } from 'lucide-react';
+import { Camera, Upload, FileText, CheckCircle2, AlertCircle, PenTool, Palette, Type } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { SignatureCanvas } from '@/components/shared/SignatureCanvas';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "../../components/ui/textarea";
 
 export default function ClientDashboard() {
   const [documents, setDocuments] = useState(mockDocuments);
+  const [openSignatureId, setOpenSignatureId] = useState<string | null>(null);
+
   const completedDocs = documents.filter(d => d.status === 'validated').length;
   const uploadedDocs = documents.filter(d => d.status === 'uploaded').length;
   
@@ -24,11 +36,123 @@ export default function ClientDashboard() {
   const handleFileUpload = (docId: string, event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Simulate upload success
       setDocuments(prev => prev.map(doc => 
-        doc.id === docId ? { ...doc, status: 'uploaded' } : doc
+        doc.id === docId ? { ...doc, status: 'uploaded', value: file.name } : doc
       ));
     }
+  };
+
+  const handleSignature = (docId: string, signatureData: string) => {
+    setDocuments(prev => prev.map(doc => 
+        doc.id === docId ? { ...doc, status: 'uploaded', value: signatureData } : doc
+    ));
+    setOpenSignatureId(null);
+  };
+
+  const handleColorChange = (docId: string, color: string) => {
+     setDocuments(prev => prev.map(doc => 
+        doc.id === docId ? { ...doc, status: 'uploaded', value: color } : doc
+    ));
+  };
+   
+  const handleTextChange = (docId: string, text: string) => {
+      // Mark as uploaded if it has content, otherwise pending
+      const status = text.length > 5 ? 'uploaded' : 'pending';
+      setDocuments(prev => prev.map(doc => 
+        doc.id === docId ? { ...doc, status, value: text } : doc
+    ));
+  };
+
+  const renderInputAction = (doc: typeof mockDocuments[0]) => {
+      if (doc.status === 'validated') {
+          return (
+             <span className="text-xs font-medium text-green-600 dark:text-green-400 px-3 py-1 bg-green-50 dark:bg-green-900/20 rounded-full">
+                Aprobado
+             </span>
+          );
+      }
+
+      switch (doc.inputType) {
+          case 'signature':
+              return (
+                  <Dialog open={openSignatureId === doc.id} onOpenChange={(open) => setOpenSignatureId(open ? doc.id : null)}>
+                    <DialogTrigger asChild>
+                        <Button size="sm" className="gap-2 bg-primary hover:bg-primary/90">
+                           <PenTool className="h-4 w-4" /> 
+                           {doc.status === 'uploaded' ? 'Firmado' : 'Firmar'}
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-lg">
+                        <DialogHeader>
+                            <DialogTitle>Firma Digital: {doc.name}</DialogTitle>
+                        </DialogHeader>
+                        <div className="py-4">
+                            <SignatureCanvas 
+                                onSign={(data) => handleSignature(doc.id, data)}
+                                onClear={() => {}} 
+                            />
+                        </div>
+                    </DialogContent>
+                  </Dialog>
+              );
+          
+          case 'color':
+              return (
+                  <div className="flex items-center gap-3">
+                      <div className="relative overflow-hidden w-10 h-10 rounded-full border border-border shadow-sm">
+                        <Input 
+                            type="color" 
+                            className="absolute -top-2 -left-2 w-16 h-16 p-0 cursor-pointer border-0"
+                            value={doc.value || "#000000"}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleColorChange(doc.id, e.target.value)}
+                        />
+                      </div>
+                      <span className="text-xs font-mono text-muted-foreground uppercase">
+                          {doc.value || "Seleccionar"}
+                      </span>
+                  </div>
+              );
+
+          case 'text':
+             if (doc.status === 'uploaded' || doc.status === 'pending') {
+                 // Inline text area for "text" types
+                 return null; // Handle in main render
+             }
+             return null;
+          
+          case 'file':
+          default:
+              return (
+                <div className="relative">
+                    <input
+                        type="file"
+                        accept="image/*,application/pdf"
+                        capture="environment"
+                        id={`file-${doc.id}`}
+                        className="hidden"
+                        onChange={(e) => handleFileUpload(doc.id, e)}
+                    />
+                    <div className="flex gap-2">
+                        <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="hidden sm:flex gap-2"
+                            onClick={() => document.getElementById(`file-${doc.id}`)?.click()}
+                        >
+                            <Upload className="h-4 w-4" /> Subir
+                        </Button>
+                        <Button 
+                            size="sm" 
+                            className="gap-2 bg-primary hover:bg-primary/90"
+                            onClick={() => document.getElementById(`file-${doc.id}`)?.click()}
+                        >
+                            <Camera className="h-4 w-4" /> 
+                            <span className="hidden sm:inline">Foto</span>
+                        </Button>
+                    </div>
+                </div>
+              );
+      }
   };
 
   return (
@@ -133,69 +257,61 @@ export default function ClientDashboard() {
                   ${doc.status === 'pending' ? 'border-l-4 border-l-amber-500 bg-card hover:translate-x-1' : 'opacity-75 bg-secondary/50'}
                 `}
               >
-                <div className="p-4 flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className={`
-                      h-10 w-10 rounded-full flex items-center justify-center shrink-0
-                      ${doc.status === 'validated' ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : ''}
-                      ${doc.status === 'uploaded' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' : ''}
-                      ${doc.status === 'pending' ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400' : ''}
-                    `}>
-                      {doc.status === 'validated' && <CheckCircle2 className="h-5 w-5" />}
-                      {doc.status === 'uploaded' && <Clock className="h-5 w-5" />}
-                      {doc.status === 'pending' && <AlertCircle className="h-5 w-5" />}
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-foreground">{doc.name}</h4>
-                      <p className="text-xs text-muted-foreground">{doc.type}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center">
-                    {doc.status === 'pending' && (
-                      <div className="relative">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          capture="environment"
-                          id={`file-${doc.id}`}
-                          className="hidden"
-                          onChange={(e) => handleFileUpload(doc.id, e)}
-                        />
-                        <div className="flex gap-2">
-                           <Button 
-                            variant="outline" 
-                            size="sm" 
-                            className="hidden sm:flex gap-2"
-                            onClick={() => document.getElementById(`file-${doc.id}`)?.click()}
-                          >
-                             <Upload className="h-4 w-4" /> Subir PDF
-                           </Button>
-                           <Button 
-                             size="sm" 
-                             className="gap-2 bg-primary hover:bg-primary/90"
-                             onClick={() => document.getElementById(`file-${doc.id}`)?.click()}
-                           >
-                             <Camera className="h-4 w-4" /> 
-                             <span className="hidden sm:inline">Tomar Foto</span>
-                             <span className="sm:hidden">Foto</span>
-                           </Button>
+                <div className="p-4">
+                    <div className="flex items-center justify-between gap-4 mb-3">
+                        <div className="flex items-center gap-4">
+                            <div className={`
+                            h-10 w-10 rounded-full flex items-center justify-center shrink-0
+                            ${doc.status === 'validated' ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : ''}
+                            ${doc.status === 'uploaded' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' : ''}
+                            ${doc.status === 'pending' && doc.inputType === 'signature' ? 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400' : ''}
+                            ${doc.status === 'pending' && doc.inputType !== 'signature' ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400' : ''}
+                            `}>
+                            {doc.status === 'validated' && <CheckCircle2 className="h-5 w-5" />}
+                            {doc.status !== 'validated' && doc.inputType === 'signature' && <PenTool className="h-5 w-5" />}
+                            {doc.status !== 'validated' && doc.inputType === 'color' && <Palette className="h-5 w-5" />}
+                            {doc.status !== 'validated' && doc.inputType === 'text' && <Type className="h-5 w-5" />}
+                            {doc.status !== 'validated' && doc.inputType === 'file' && <AlertCircle className="h-5 w-5" />}
+                            </div>
+                            <div>
+                                <h4 className="font-medium text-foreground">{doc.name}</h4>
+                                <p className="text-xs text-muted-foreground">{doc.type}</p>
+                            </div>
                         </div>
-                      </div>
+
+                        <div className="flex items-center">
+                            {renderInputAction(doc)}
+                        </div>
+                    </div>
+
+                    {/* Render Text Area content if type is text */}
+                    {doc.inputType === 'text' && (
+                        <div className="mt-2">
+                             <Textarea 
+                                placeholder="Describa brevemente la actividad comercial principal..."
+                                className="min-h-[80px]"
+                                value={doc.value || ''}
+                                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleTextChange(doc.id, e.target.value)}
+                             />
+                        </div>
                     )}
                     
-                    {doc.status === 'uploaded' && (
-                       <span className="text-xs font-medium text-blue-600 dark:text-blue-400 px-3 py-1 bg-blue-50 dark:bg-blue-900/20 rounded-full">
-                         En Revisión
-                       </span>
-                    )}
+                    {/* Show value for Colors if selected */}
+                     {doc.inputType === 'color' && doc.value && (
+                        <div 
+                            className="mt-2 h-4 w-full rounded-full opacity-50" 
+                            style={{ backgroundColor: doc.value }} 
+                        />
+                     )}
+                     
+                     {/* Show signature if present */}
+                     {doc.inputType === 'signature' && doc.value && (
+                         <div className="mt-2 p-2 border border-dashed rounded bg-secondary/50">
+                             {/* eslint-disable-next-line @next/next/no-img-element */}
+                             <img src={doc.value} alt="Firma" className="h-12 object-contain opacity-80" />
+                         </div>
+                     )}
 
-                    {doc.status === 'validated' && (
-                       <span className="text-xs font-medium text-green-600 dark:text-green-400 px-3 py-1 bg-green-50 dark:bg-green-900/20 rounded-full">
-                         Aprobado
-                       </span>
-                    )}
-                  </div>
                 </div>
               </Card>
             ))}
